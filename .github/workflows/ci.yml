@@ -9,6 +9,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          coverage: none
+
       - name: Cache PHP dependencies
         uses: actions/cache@v1
         with:
@@ -33,4 +38,4 @@ jobs:
           php artisan migrate
 
       - name: Execute tests (Unit and Feature tests) via PHPUnit
-        run: vendor/phpunit/phpunit/phpunit -v --coverage-text --colors=never --stderr
+        run: vendor/phpunit/phpunit/phpunit -v --stderr
