@@ -59,39 +59,6 @@
     <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash"/>
     <rule ref="SlevomatCodingStandard.Commenting.RequireOneLineDocComment"/>
     <rule ref="SlevomatCodingStandard.Commenting.UselessInheritDocComment"/>
-    <rule ref="SlevomatCodingStandard.Classes.ClassStructure">
-        <properties>
-            <property name="groups" type="array">
-                <element value="uses"/>
-
-                <element value="public constants"/>
-                <element value="protected constants"/>
-                <element value="private constants"/>
-
-                <element value="public properties"/>
-                <element value="protected properties"/>
-                <element value="private properties"/>
-
-                <element value="static properties"/>
-
-                <element value="constructor"/>
-                <element value="destructor"/>
-                <element value="static constructors"/>
-
-                <element value="magic methods"/>
-
-                <element value="public methods"/>
-                <element value="protected methods"/>
-                <element value="private methods"/>
-
-                <element value="abstract methods"/>
-
-                <element value="public static methods"/>
-                <element value="protected static methods"/>
-                <element value="private static methods"/>
-            </property>
-        </properties>
-    </rule>
 
     <file>app/</file>
 
