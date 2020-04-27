@@ -76,16 +76,19 @@
 
                 <element value="constructor"/>
                 <element value="destructor"/>
-
-                <element value="all public methods"/>
-                <element value="all protected methods"/>
-                <element value="all private methods"/>
-
-                <element value="methods"/>
+                <element value="static constructors"/>
 
                 <element value="magic methods"/>
 
-                <element value="static methods"/>
+                <element value="public methods"/>
+                <element value="protected methods"/>
+                <element value="private methods"/>
+
+                <element value="abstract methods"/>
+
+                <element value="public static methods"/>
+                <element value="protected static methods"/>
+                <element value="private static methods"/>
             </property>
         </properties>
     </rule>
