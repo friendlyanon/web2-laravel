@@ -15,6 +15,7 @@ class CreatePartnerGroupsTable extends Migration
     {
         Schema::create('partner_groups', static function (Blueprint $table) {
             $table->id();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
