@@ -16,5 +16,8 @@ namespace App\Utils;
  */
 final class Loop
 {
-    private function __construct() { }
+    private function __construct()
+    {
+        //
+    }
 }
