@@ -32,7 +32,7 @@ class User extends Authenticatable
 
     public function getIsSuperadminAttribute(): bool
     {
-        return $this->id === 1;
+        return $this['id'] === 1;
     }
 
     public function organizations(): BelongsToMany
