@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddForeignKeyToTables extends Migration
+class AddForeignKeysToTables extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,18 @@ class AddForeignKeyToTables extends Migration
      */
     public function up()
     {
-        Schema::table('partners', static function (Blueprint $table) {
-            $table->foreignId('partner_group_id')->constrained();
+        Schema::table('partners', function (Blueprint $table) {
+            $this->foreign($table, 'partner_group_id');
         });
 
-        Schema::table('products', static function (Blueprint $table) {
-            $table->foreignId('tax_id')->constrained();
+        Schema::table('products', function (Blueprint $table) {
+            $this->foreign($table, 'tax_id');
         });
 
-        Schema::table('invoices', static function (Blueprint $table) {
-            $table->foreignId('partner_id')->constrained();
-            $table->foreignId('product_id')->constrained();
-            $table->foreignId('discount_id')->constrained();
+        Schema::table('invoices', function (Blueprint $table) {
+            $this->foreign($table, 'partner_id');
+            $this->foreign($table, 'product_id');
+            $this->foreign($table, 'discount_id');
         });
     }
 
@@ -48,5 +48,12 @@ class AddForeignKeyToTables extends Migration
             $table->dropForeign('product_id');
             $table->dropForeign('discount_id');
         });
+    }
+
+    protected function foreign(Blueprint $table, string $column)
+    {
+        $name = Str::plural(substr($column, 0, strpos($column, '_id')));
+        $table->foreign($column)->references('id')->on($name)
+            ->onDelete('SET NULL');
     }
 }

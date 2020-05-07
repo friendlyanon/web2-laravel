@@ -19,7 +19,7 @@ class CreateProductsTable extends Migration
             $table->integer('tariff');
             $table->string('name');
             $table->decimal('net_price');
-            $table->unsignedBigInteger('tax_id');
+            $table->unsignedBigInteger('tax_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

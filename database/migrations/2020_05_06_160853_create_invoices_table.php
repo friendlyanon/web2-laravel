@@ -18,9 +18,9 @@ class CreateInvoicesTable extends Migration
             $table->integer('quantity');
             $table->decimal('total');
             $table->boolean('is_closed')->default(false);
-            $table->unsignedBigInteger('partner_id');
-            $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('discount_id');
+            $table->unsignedBigInteger('partner_id')->nullable();
+            $table->unsignedBigInteger('product_id')->nullable();
+            $table->unsignedBigInteger('discount_id')->nullable();
             $table->timestamp('expires_at');
             $table->softDeletes();
             $table->timestamps();
