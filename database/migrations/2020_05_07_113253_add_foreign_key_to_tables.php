@@ -24,6 +24,7 @@ class AddForeignKeyToTables extends Migration
         Schema::table('invoices', static function (Blueprint $table) {
             $table->foreignId('partner_id')->constrained();
             $table->foreignId('product_id')->constrained();
+            $table->foreignId('discount_id')->constrained();
         });
     }
 
@@ -45,6 +46,7 @@ class AddForeignKeyToTables extends Migration
         Schema::table('invoices', static function (Blueprint $table) {
             $table->dropForeign('partner_id');
             $table->dropForeign('product_id');
+            $table->dropForeign('discount_id');
         });
     }
 }
