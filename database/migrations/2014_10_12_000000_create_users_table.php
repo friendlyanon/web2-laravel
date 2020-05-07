@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -24,6 +25,8 @@ class CreateUsersTable extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
+
+        $this->createSuperadmin();
     }
 
     /**
@@ -34,5 +37,16 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
+    }
+
+    protected function createSuperadmin()
+    {
+        // User with ID 1 is the superadmin
+        User::create([
+            'name' => 'admin',
+            'email' => 'admin@domain.tld',
+            'password' => 'admin',
+            'is_admin' => true,
+        ]);
     }
 }
