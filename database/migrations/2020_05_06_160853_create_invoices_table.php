@@ -15,6 +15,12 @@ class CreateInvoicesTable extends Migration
     {
         Schema::create('invoices', static function (Blueprint $table) {
             $table->id();
+            $table->integer('quantity');
+            $table->decimal('total');
+            $table->boolean('is_closed')->default(false);
+            $table->unsignedBigInteger('partner_id');
+            $table->unsignedBigInteger('product_id');
+            $table->timestamp('expires_at');
             $table->softDeletes();
             $table->timestamps();
         });

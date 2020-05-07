@@ -15,6 +15,11 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', static function (Blueprint $table) {
             $table->id();
+            $table->string('quantity');
+            $table->integer('tariff');
+            $table->string('name');
+            $table->decimal('price');
+            $table->unsignedBigInteger('tax_id');
             $table->softDeletes();
             $table->timestamps();
         });

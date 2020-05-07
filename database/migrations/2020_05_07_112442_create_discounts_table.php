@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePartnersTable extends Migration
+class CreateDiscountsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreatePartnersTable extends Migration
      */
     public function up()
     {
-        Schema::create('partners', static function (Blueprint $table) {
+        Schema::create('discounts', static function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('zip_code');
-            $table->string('city');
-            $table->string('address');
-            $table->unsignedBigInteger('partner_group_id');
+            $table->decimal('discount', 4)->unique();
+            $table->timestamp('starts_at')->nullable();
+            $table->timestamp('ends_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -32,6 +30,6 @@ class CreatePartnersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('partners');
+        Schema::dropIfExists('discounts');
     }
 }

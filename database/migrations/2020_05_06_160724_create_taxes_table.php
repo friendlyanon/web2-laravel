@@ -15,6 +15,7 @@ class CreateTaxesTable extends Migration
     {
         Schema::create('taxes', static function (Blueprint $table) {
             $table->id();
+            $table->decimal('tax', 4)->unique();
             $table->softDeletes();
             $table->timestamps();
         });
