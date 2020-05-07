@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-/**
- * @property-read bool $is_superadmin
- */
+/** @property-read bool $is_superadmin */
 class User extends Authenticatable
 {
     use SoftDeletes;
