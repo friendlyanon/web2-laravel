@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('quantity');
             $table->integer('tariff');
             $table->string('name');
-            $table->decimal('price');
+            $table->decimal('net_price');
             $table->unsignedBigInteger('tax_id');
             $table->softDeletes();
             $table->timestamps();
