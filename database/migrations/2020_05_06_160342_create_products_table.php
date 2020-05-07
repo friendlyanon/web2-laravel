@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->decimal('net_price');
             $table->unsignedBigInteger('tax_id')->nullable();
+            $table->unsignedBigInteger('organization_id');
             $table->softDeletes();
             $table->timestamps();
         });

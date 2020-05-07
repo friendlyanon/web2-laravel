@@ -20,6 +20,7 @@ class CreatePartnersTable extends Migration
             $table->string('city');
             $table->string('address');
             $table->unsignedBigInteger('partner_group_id')->nullable();
+            $table->unsignedBigInteger('organization_id');
             $table->softDeletes();
             $table->timestamps();
         });

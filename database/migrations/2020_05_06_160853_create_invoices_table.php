@@ -21,6 +21,7 @@ class CreateInvoicesTable extends Migration
             $table->unsignedBigInteger('partner_id')->nullable();
             $table->unsignedBigInteger('product_id')->nullable();
             $table->unsignedBigInteger('discount_id')->nullable();
+            $table->unsignedBigInteger('organization_id');
             $table->timestamp('expires_at');
             $table->softDeletes();
             $table->timestamps();

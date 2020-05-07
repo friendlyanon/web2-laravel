@@ -18,6 +18,7 @@ class CreateDiscountsTable extends Migration
             $table->decimal('discount', 4)->unique();
             $table->timestamp('starts_at')->nullable();
             $table->timestamp('ends_at')->nullable();
+            $table->unsignedBigInteger('organization_id');
             $table->softDeletes();
             $table->timestamps();
         });
