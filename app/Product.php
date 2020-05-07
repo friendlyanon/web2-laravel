@@ -14,4 +14,9 @@ class Product extends Model
     {
         return $this->belongsTo(Organization::class);
     }
+
+    public function tax(): BelongsTo
+    {
+        return $this->belongsTo(Tax::class);
+    }
 }
