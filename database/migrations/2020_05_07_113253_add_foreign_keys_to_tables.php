@@ -6,6 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 class AddForeignKeysToTables extends Migration
 {
+    protected const RELATIONS = [
+        'partners' => ['partner_group'],
+        'partner_groups' => [],
+        'taxes' => [],
+        'discounts' => [],
+        'products' => ['tax'],
+        'invoices' => ['partner', 'product', 'discount'],
+    ];
+
     /**
      * Run the migrations.
      *
@@ -13,38 +22,16 @@ class AddForeignKeysToTables extends Migration
      */
     public function up()
     {
-        Schema::table('partners', function (Blueprint $table) {
-            $this->foreign($table, 'partner_group_id');
+        $keys = [];
+        $callback = function (Blueprint $table) use (&$keys) {
             $this->addOrganization($table);
-        });
-
-        Schema::table('partner_groups', function (Blueprint $table) {
-            $this->addOrganization($table);
-        });
-
-        Schema::table('products', function (Blueprint $table) {
-            $this->addOrganization($table);
-        });
-
-        Schema::table('taxes', function (Blueprint $table) {
-            $this->addOrganization($table);
-        });
-
-        Schema::table('discounts', function (Blueprint $table) {
-            $this->addOrganization($table);
-        });
-
-        Schema::table('products', function (Blueprint $table) {
-            $this->foreign($table, 'tax_id');
-            $this->addOrganization($table);
-        });
-
-        Schema::table('invoices', function (Blueprint $table) {
-            $this->foreign($table, 'partner_id');
-            $this->foreign($table, 'product_id');
-            $this->foreign($table, 'discount_id');
-            $this->addOrganization($table);
-        });
+            foreach ($keys as $key) {
+                $this->foreign($table, $key);
+            }
+        };
+        foreach (self::RELATIONS as $table => $keys) {
+            Schema::table($table, $callback);
+        }
     }
 
     /**
@@ -54,49 +41,30 @@ class AddForeignKeysToTables extends Migration
      */
     public function down()
     {
-        Schema::table('partners', static function (Blueprint $table) {
-            $table->dropForeign('partner_group_id');
+        $keys = [];
+        $callback = static function (Blueprint $table) use (&$keys) {
             $table->dropForeign('organization_id');
-        });
-
-        Schema::table('partner_groups', static function (Blueprint $table) {
-            $table->dropForeign('organization_id');
-        });
-
-        Schema::table('products', static function (Blueprint $table) {
-            $table->dropForeign('organization_id');
-        });
-
-        Schema::table('taxes', static function (Blueprint $table) {
-            $table->dropForeign('organization_id');
-        });
-
-        Schema::table('discounts', static function (Blueprint $table) {
-            $table->dropForeign('organization_id');
-        });
-
-        Schema::table('products', static function (Blueprint $table) {
-            $table->dropForeign('tax_id');
-            $table->dropForeign('organization_id');
-        });
-
-        Schema::table('invoices', static function (Blueprint $table) {
-            $table->dropForeign('partner_id');
-            $table->dropForeign('product_id');
-            $table->dropForeign('discount_id');
-            $table->dropForeign('organization_id');
-        });
+            foreach ($keys as $key) {
+                $table->dropForeign($key . '_id');
+            }
+        };
+        foreach (self::RELATIONS as $table => $keys) {
+            Schema::table($table, $callback);
+        }
     }
 
     protected function addOrganization(Blueprint $table)
     {
-        $this->foreign($table, 'organization_id');
+        $this->foreign($table, 'organization', 'CASCADE');
     }
 
-    protected function foreign(Blueprint $table, string $column)
-    {
-        $name = Str::plural(substr($column, 0, strpos($column, '_id')));
-        $table->foreign($column)->references('id')->on($name)
-            ->onDelete('SET NULL');
+    protected function foreign(
+        Blueprint $table,
+        string $key,
+        string $onDelete = 'SET NULL'
+    ) {
+        $name = Str::plural($key);
+        $table->foreign($key . '_id')->references('id')->on($name)
+            ->onDelete($onDelete);
     }
 }
