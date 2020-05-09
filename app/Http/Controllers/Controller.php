@@ -21,7 +21,7 @@ abstract class Controller extends BaseController
 
     public function getMiddleware()
     {
-        return array_map(self::class . '::mapMiddleware', $this->middleware);
+        return array_map(self::class . '::parseMiddleware', $this->middleware);
     }
 
     protected function attachAll(
@@ -45,9 +45,9 @@ abstract class Controller extends BaseController
         $this->attachAll($model, $request, $name);
     }
 
-    public static function mapMiddleware($middleware): array
+    public static function parseMiddleware($middleware): array
     {
-        if (\is_array($middleware)) {
+        if (! \is_string($middleware)) {
             return $middleware;
         }
 
