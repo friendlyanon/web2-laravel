@@ -16,7 +16,7 @@ class UserRequest extends Request
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'is_admin' => 'boolean|can_create_admins',
-            'organizations' => 'required|array',
+            'organizations' => 'array',
         ];
     }
 }
