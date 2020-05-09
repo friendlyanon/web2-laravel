@@ -58,7 +58,7 @@ class User extends Authenticatable
                 return true;
             }
 
-            return auth()->id() === 1;
+            return (int) auth()->id() === 1;
         });
     }
 }
