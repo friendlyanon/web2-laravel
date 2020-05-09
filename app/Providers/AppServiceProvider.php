@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     {
         \Validator::extend('can_create_admins', static function () {
             /** @var User|null $user */
-            $user = auth()->user();
+            $user = \Auth::user();
 
             return $user->is_superadmin ?? false;
         });
