@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-class UserRequest extends AuthorizedRequest
+class UserRequest extends Request
 {
     /**
      * Get the validation rules that apply to the request.

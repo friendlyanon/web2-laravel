@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-class OrganizationRequest extends AuthorizedRequest
+class OrganizationRequest extends Request
 {
     /**
      * Get the validation rules that apply to the request.
