@@ -38,14 +38,14 @@ class UserController extends Controller
 
     public function show($user)
     {
-        $model = User::find($user);
+        $model = User::findOrFail($user);
 
         return view('user.show', ['user' => $model]);
     }
 
     public function edit($user)
     {
-        $model = User::find($user);
+        $model = User::findOrFail($user);
 
         return view('user.edit', ['user' => $model]);
     }
@@ -68,10 +68,10 @@ class UserController extends Controller
     public function destroy($user)
     {
         $model = User::findOrFail($user, ['email']);
-        $email = $model->email;
 
         if ($model->delete()) {
-            return Redirect::route('user.index')->with('deleted', $email);
+            return Redirect::route('user.index')
+                ->with('deleted', $model->email);
         }
 
         return Redirect::back()->withErrors(Lang::get('error.user.destroy'));
