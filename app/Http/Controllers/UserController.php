@@ -69,9 +69,11 @@ class UserController extends Controller
     {
         $model = User::findOrFail($user, ['email']);
         $email = $model->email;
-        $deleted = $model->delete();
 
-        return Redirect::route('user.index')
-            ->with('deleted', $deleted !== false ? $email : false);
+        if ($model->delete()) {
+            return Redirect::route('user.index')->with('deleted', $email);
+        }
+
+        return Redirect::back()->withErrors(Lang::get('error.user.destroy'));
     }
 }
