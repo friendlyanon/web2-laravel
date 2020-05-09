@@ -9,7 +9,10 @@ use Redirect;
 
 class UserController extends Controller
 {
-    protected $middleware = ['auth'];
+    protected $middleware = [
+        'auth',
+        'can:access_users',
+    ];
 
     public function index()
     {
