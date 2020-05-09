@@ -27,6 +27,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        \Gate::define('access_users', static fn(User $user) => $user->is_admin);
+        $isAdmin = static fn(User $user) => $user->is_admin;
+        \Gate::define('access_users', $isAdmin);
+        \Gate::define('access_organizations', $isAdmin);
     }
 }
