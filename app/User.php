@@ -49,10 +49,16 @@ class User extends Authenticatable
     {
         parent::boot();
 
+        // Can't delete superadmin
         static::deleting(static fn(User $user) => ! $user->is_superadmin);
 
-        static::saving(
-            static fn(User $user) => $user['id'] !== 1 || auth()->id() === 1
-        );
+        // Only superadmin can edit superadmin details
+        static::saving(static function (User $user) {
+            if ($user['id'] !== 1) {
+                return true;
+            }
+
+            return auth()->id() === 1;
+        });
     }
 }
