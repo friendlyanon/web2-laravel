@@ -24,10 +24,14 @@ class OrganizationController extends Controller
 
     public function __construct()
     {
-        $this->user = \Auth::user();
-        $this->organizations = $this->user->is_admin
-            ? new Builder(Organization::toBase())
-            : $this->user->organizations();
+        $this->middleware(function ($request, $next) {
+            $this->user = \Auth::user();
+            $this->organizations = $this->user->is_admin
+                ? Organization::query()
+                : $this->user->organizations();
+
+            return $next($request);
+        });
     }
 
     public function index()
