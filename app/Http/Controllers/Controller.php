@@ -13,8 +13,6 @@ abstract class Controller extends BaseController
     use DispatchesJobs;
     use ValidatesRequests;
 
-    protected $middleware = ['auth'];
-
     public function getMiddleware()
     {
         return array_map(self::class . '::mapMiddleware', $this->middleware);
