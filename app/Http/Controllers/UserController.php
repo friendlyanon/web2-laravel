@@ -20,19 +20,20 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('user.create');
+        return view('users.create');
     }
 
     public function store(UserRequest $request)
     {
         $model = new User($request->all());
+        $this->attachAll($model, $request, 'organizations');
 
         if ($model->save()) {
-            return Redirect::route('user.index')->with('created', true);
+            return Redirect::route('users.index')->with('created', true);
         }
 
         return Redirect::back()
-            ->withErrors(Lang::get('error.user.store'))
+            ->withErrors(Lang::get('error.users.store'))
             ->withInput($request->input());
     }
 
@@ -40,28 +41,29 @@ class UserController extends Controller
     {
         $model = User::findOrFail($user);
 
-        return view('user.show', ['user' => $model]);
+        return view('users.show', ['user' => $model]);
     }
 
     public function edit($user)
     {
         $model = User::findOrFail($user);
 
-        return view('user.edit', ['user' => $model]);
+        return view('users.edit', ['user' => $model]);
     }
 
     public function update(UserRequest $request, $user)
     {
         $model = User::findOrFail($user);
         $model->fill($request->all());
+        $this->reattachAll($model, $request, 'organizations');
 
         if ($model->save()) {
-            return Redirect::route('user.show', compact('user'))
+            return Redirect::route('users.show', compact('user'))
                 ->with('updated', true);
         }
 
         return Redirect::back()
-            ->withErrors(Lang::get('error.user.update'))
+            ->withErrors(Lang::get('error.users.update'))
             ->withInput($request->input());
     }
 
@@ -70,10 +72,10 @@ class UserController extends Controller
         $model = User::findOrFail($user, ['email']);
 
         if ($model->delete()) {
-            return Redirect::route('user.index')
+            return Redirect::route('users.index')
                 ->with('deleted', $model->email);
         }
 
-        return Redirect::back()->withErrors(Lang::get('error.user.destroy'));
+        return Redirect::back()->withErrors(Lang::get('error.users.destroy'));
     }
 }
