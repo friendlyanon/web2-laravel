@@ -15,7 +15,8 @@ class OrganizationRequest extends Request
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'is_admin' => 'can_create_admins',
+            'is_admin' => 'boolean|can_create_admins',
+            'users' => 'required|array',
         ];
     }
 }
