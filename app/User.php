@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Hash;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -25,18 +26,33 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'is_admin' => 'boolean',
-    ];
+    protected $dates = ['email_verified_at'];
+
+    protected $casts = ['is_admin' => 'boolean'];
 
     public function getIsSuperadminAttribute(): bool
     {
         return $this['id'] === 1;
     }
 
+    public function setPasswordAttribute(string $password)
+    {
+        $this->attributes['password'] = Hash::make($password);
+    }
+
     public function organizations(): BelongsToMany
     {
         return $this->belongsToMany(Organization::class);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(static fn(User $user) => ! $user->is_superadmin);
+
+        static::saving(
+            static fn(User $user) => $user['id'] !== 1 || auth()->id() === 1
+        );
     }
 }
