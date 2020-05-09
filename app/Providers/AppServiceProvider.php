@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\User;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +24,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        \Validator::extend('can_create_admins', static function () {
+            /** @var User|null $user */
+            $user = auth()->user();
+
+            return $user->is_superadmin ?? false;
+        });
     }
 }
