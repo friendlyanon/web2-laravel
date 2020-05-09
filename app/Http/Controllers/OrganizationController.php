@@ -4,16 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OrganizationRequest;
 use App\Organization;
+use App\User;
+use Illuminate\Database\Eloquent\Builder;
 use Lang;
 use Redirect;
 
 class OrganizationController extends Controller
 {
-    protected $middleware = ['auth', 'can:access_organizations'];
+    protected $middleware = [
+        'auth',
+        'can:manage_organizations|only:create,store,destroy',
+    ];
+
+    /** @var User */
+    protected $user;
+
+    /** @var Builder|Organization[]|Organization */
+    protected $organizations;
+
+    public function __construct()
+    {
+        $this->user = \Auth::user();
+        $this->organizations = $this->user->is_admin
+            ? new Builder(Organization::toBase())
+            : $this->user->organizations();
+    }
 
     public function index()
     {
-        $items = Organization::cursor();
+        $items = $this->organizations->cursor();
 
         return view('itemlist', compact('items'));
     }
@@ -26,9 +45,9 @@ class OrganizationController extends Controller
     public function store(OrganizationRequest $request)
     {
         $model = new Organization($request->all());
-        $this->attachAll($model, $request, 'users');
 
         if ($model->save()) {
+            $this->attachAll($model, $request, 'users');
             return Redirect::route('organizations.index')
                 ->with('created', true);
         }
@@ -40,23 +59,26 @@ class OrganizationController extends Controller
 
     public function show($organization)
     {
-        $model = Organization::findOrFail($organization);
+        $model = $this->organizations->findOrFail($organization);
 
         return view('organizations.show', ['organization' => $model]);
     }
 
     public function edit($organization)
     {
-        $model = Organization::findOrFail($organization);
+        $model = $this->organizations->findOrFail($organization);
 
         return view('organizations.edit', ['organization' => $model]);
     }
 
     public function update(OrganizationRequest $request, $organization)
     {
-        $model = Organization::findOrFail($organization);
+        $model = $this->organizations->findOrFail($organization);
         $model->fill($request->all());
-        $this->reattachAll($model, $request, 'users');
+
+        if ($this->user->is_admin) {
+            $this->reattachAll($model, $request, 'users');
+        }
 
         if ($model->save()) {
             return Redirect::route('organizations.show', compact('organization'))
@@ -70,7 +92,7 @@ class OrganizationController extends Controller
 
     public function destroy($organization)
     {
-        $model = Organization::findOrFail($organization, ['email']);
+        $model = $this->organizations->findOrFail($organization, ['email']);
 
         if ($model->delete()) {
             return Redirect::route('organizations.index')

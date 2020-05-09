@@ -29,6 +29,6 @@ class AuthServiceProvider extends ServiceProvider
 
         $isAdmin = static fn(User $user) => $user->is_admin;
         \Gate::define('access_users', $isAdmin);
-        \Gate::define('access_organizations', $isAdmin);
+        \Gate::define('manage_organizations', $isAdmin);
     }
 }

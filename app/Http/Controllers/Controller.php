@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Generator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Http\FormRequest;
@@ -28,6 +29,7 @@ abstract class Controller extends BaseController
         FormRequest $request,
         string $name
     ) {
+        /** @var BelongsToMany $relation */
         $relation = $model->{$name}();
         foreach ($request->get($name, []) as $id) {
             $relation->attach($id);
@@ -51,7 +53,7 @@ abstract class Controller extends BaseController
 
         [$middleware, $rest] =
             array_replace(self::FILLER, explode('|', $middleware, 2));
-        $options = iterator_to_array(self::buildOptions($rest), false);
+        $options = iterator_to_array(self::buildOptions($rest));
         return compact('middleware', 'options');
     }
 

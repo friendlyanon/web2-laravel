@@ -15,18 +15,18 @@
                         @endif
 
                         <ul class="list-group">
-                            @if (auth()->user()->is_admin)
+                            @can('access_users')
                                 <li class="list-group-item">
-                                    <a href="{{ route('user.index') }}">
+                                    <a href="{{ route('users.index') }}">
                                         Manage users
                                     </a>
                                 </li>
-                            @endif
-                            {{--                            <li class="list-group-item">--}}
-                            {{--                                <a href="{{ route('organization.index') }}">--}}
-                            {{--                                    Manage organizations--}}
-                            {{--                                </a>--}}
-                            {{--                            </li>--}}
+                            @endcan
+                            <li class="list-group-item">
+                                <a href="{{ route('organizations.index') }}">
+                                    View organizations
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
