@@ -49,7 +49,8 @@ abstract class SubResourceController extends Controller
         $request = $this->validatedRequest();
         /** @var HasMany $relation */
         $relation = $this->builder($organization);
-        $model = new ($this->model)($request->all());
+        $class = $this->model;
+        $model = new $class($request->all());
 
         if ($relation->save($model)) {
             return Redirect
