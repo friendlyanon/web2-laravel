@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OrganizationRequest;
 use App\Organization;
-use App\User;
-use Illuminate\Database\Eloquent\Builder;
 use Lang;
 use Redirect;
 
@@ -15,24 +13,6 @@ class OrganizationController extends Controller
         'auth',
         'can:manage_organizations|only:create,store,destroy',
     ];
-
-    /** @var User */
-    protected $user;
-
-    /** @var Builder|Organization[]|Organization */
-    protected $organizations;
-
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            $this->user = \Auth::user();
-            $this->organizations = $this->user->is_admin
-                ? Organization::query()
-                : $this->user->organizations();
-
-            return $next($request);
-        });
-    }
 
     public function index()
     {

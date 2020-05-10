@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Organization;
+use App\User;
 use Generator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -18,6 +21,24 @@ abstract class Controller extends BaseController
     use ValidatesRequests;
 
     private const FILLER = [null, null];
+
+    /** @var User */
+    protected $user;
+
+    /** @var Builder|Organization[]|Organization */
+    protected $organizations;
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $this->user = \Auth::user();
+            $this->organizations = $this->user->is_admin
+                ? Organization::query()
+                : $this->user->organizations();
+
+            return $next($request);
+        });
+    }
 
     public function getMiddleware()
     {
