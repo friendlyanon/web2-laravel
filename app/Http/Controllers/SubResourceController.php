@@ -22,13 +22,17 @@ abstract class SubResourceController extends Controller
     protected $request;
 
     /** @var string */
+    private $singular;
+
+    /** @var string */
     private $plural;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->plural = Str::plural(Str::snake(class_basename($this->model)));
+        $this->singular = Str::snake(class_basename($this->model));
+        $this->plural = Str::plural($this->singular);
     }
 
     public function index($organization)
@@ -46,13 +50,12 @@ abstract class SubResourceController extends Controller
 
     public function store($organization)
     {
+        $class = $this->model;
         $request = $this->validatedRequest();
         /** @var HasMany $relation */
         $relation = $this->builder($organization);
-        $class = $this->model;
-        $model = new $class($request->all());
 
-        if ($relation->save($model)) {
+        if ($relation->save(new $class($request->all()))) {
             return Redirect
                 ::route("$this->plural.index", compact('organization'))
                 ->with('created', true);
@@ -67,14 +70,14 @@ abstract class SubResourceController extends Controller
     {
         $model = $this->builder($organization)->findOrFail($id);
 
-        return view("$this->plural.show", [$this->model => $model]);
+        return view("$this->plural.show", [$this->singular => $model]);
     }
 
     public function edit($organization, $id)
     {
         $model = $this->builder($organization)->findOrFail($id);
 
-        return view("$this->plural.show", [$this->model => $model]);
+        return view("$this->plural.show", [$this->singular => $model]);
     }
 
     public function update($organization, $id)
@@ -86,7 +89,7 @@ abstract class SubResourceController extends Controller
         if ($model->save()) {
             return Redirect::route("$this->plural.show", [
                 'organization' => $organization,
-                $this->model => $model,
+                $this->singular => $model,
             ])->with('updated', true);
         }
 
