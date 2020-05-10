@@ -21,7 +21,9 @@ Auth::routes([
     'verify' => false,
 ]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', static fn() => view('home'))
+    ->name('home')
+    ->middleware('auth');
 
 Route::resources([
     'users' => 'UserController',
