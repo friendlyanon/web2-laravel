@@ -117,7 +117,7 @@ abstract class SubResourceController extends Controller
         return $request;
     }
 
-    private function builder($organization = null): Builder
+    private function builder(int $organization): Builder
     {
         return $this->organizations->where('id', $organization)
             ->{$this->plural}();
