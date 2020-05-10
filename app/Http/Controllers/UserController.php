@@ -37,27 +37,22 @@ class UserController extends Controller
             ->withInput($request->input());
     }
 
-    public function show($user)
+    public function show(User $user)
     {
-        $model = User::findOrFail($user);
-
-        return view('users.show', ['user' => $model]);
+        return view('users.show', compact('user'));
     }
 
-    public function edit($user)
+    public function edit(User $user)
     {
-        $model = User::findOrFail($user);
-
-        return view('users.edit', ['user' => $model]);
+        return view('users.edit', compact('user'));
     }
 
-    public function update(UserRequest $request, $user)
+    public function update(UserRequest $request, User $user)
     {
-        $model = User::findOrFail($user);
-        $model->fill($request->all());
-        $this->reattachAll($model, $request, 'organizations');
+        $user->fill($request->all());
+        $this->reattachAll($user, $request, 'organizations');
 
-        if ($model->save()) {
+        if ($user->save()) {
             return Redirect::route('users.show', compact('user'))
                 ->with('updated', true);
         }
@@ -67,13 +62,11 @@ class UserController extends Controller
             ->withInput($request->input());
     }
 
-    public function destroy($user)
+    public function destroy(User $user)
     {
-        $model = User::findOrFail($user, ['email']);
-
-        if ($model->delete()) {
+        if ($user->delete()) {
             return Redirect::route('users.index')
-                ->with('deleted', $model->email);
+                ->with('deleted', $user->email);
         }
 
         return Redirect::back()->withErrors(Lang::get('error.users.destroy'));
