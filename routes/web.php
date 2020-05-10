@@ -26,4 +26,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resources([
     'users' => 'UserController',
     'organizations' => 'OrganizationController',
+    'organizations.discounts' => 'DiscountController',
+    'organizations.invoices' => 'InvoiceController',
+    'organizations.partners' => 'PartnerController',
+    'organizations.partner_groups' => 'PartnerGroupController',
+    'organizations.products' => 'ProductController',
+    'organizations.taxes' => 'TaxController',
 ]);
