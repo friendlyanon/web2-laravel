@@ -48,7 +48,7 @@ abstract class SubResourceController extends Controller
     {
         $request = $this->validatedRequest();
         /** @var HasMany $relation */
-        $relation = $this->builder($organization)->{$this->plural}();
+        $relation = $this->builder($organization);
         $model = new ($this->model)($request->all());
 
         if ($relation->save($model)) {
@@ -79,9 +79,7 @@ abstract class SubResourceController extends Controller
     public function update($organization, $id)
     {
         $request = $this->validatedRequest();
-        /** @var HasMany $relation */
-        $relation = $this->builder($organization)->{$this->plural}();
-        $model = $relation->findOrFail($id);
+        $model = $this->builder($organization)->findOrFail($id);
         $model->fill($request->all());
 
         if ($model->save()) {
