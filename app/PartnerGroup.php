@@ -11,6 +11,8 @@ class PartnerGroup extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = ['name'];
+
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);

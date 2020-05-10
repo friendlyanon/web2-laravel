@@ -23,9 +23,9 @@ class CreateOrganizationsTable extends Migration
             $table->string('phone');
             $table->string('fax');
             $table->string('email');
-            $table->string('tax_id');
+            $table->string('tax_number');
             $table->string('bank_account');
-            $table->string('bank_id');
+            $table->string('bank_number');
             $table->string('iban');
             $table->string('swift');
             $table->softDeletes();

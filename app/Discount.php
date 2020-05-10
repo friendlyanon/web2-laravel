@@ -11,6 +11,11 @@ class Discount extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = [
+        'discount',
+        'ends_at',
+    ];
+
     protected $casts = [
         'starts_at' => 'datetime',
         'ends_at' => 'datetime',

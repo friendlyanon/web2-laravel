@@ -11,6 +11,22 @@ class Organization extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+        'address',
+        'bank_account',
+        'bank_number',
+        'city',
+        'country',
+        'email',
+        'fax',
+        'iban',
+        'phone',
+        'swift',
+        'zip_code',
+        'tax_number',
+    ];
+
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);

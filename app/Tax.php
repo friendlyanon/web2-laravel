@@ -11,6 +11,8 @@ class Tax extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = ['tax'];
+
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
