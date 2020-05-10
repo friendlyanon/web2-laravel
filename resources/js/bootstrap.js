@@ -7,8 +7,13 @@ window.$ = window.jQuery = jQuery;
 
 require("bootstrap");
 
-window.ky = ky.create({
-  headers: {
-    "x-requested-with": "XMLHttpRequest",
-  },
-});
+const headers = {
+  "x-requested-with": "XMLHttpRequest",
+};
+
+const meta = document.querySelector(`meta[name="csrf-token"]`);
+if (meta) {
+  headers["x-csrf-token"] = meta.content;
+}
+
+window.ky = ky.create({ headers });
