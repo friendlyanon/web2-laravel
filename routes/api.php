@@ -1,8 +1,12 @@
 <?php
 
-use Illuminate\Http\Request;
+Route::get('filter/users', 'ApiController@filterUsers')
+    ->name('api:filter_users');
 
-Route::middleware('auth:api')->get(
-    '/user',
-    static fn(Request $request) => $request->user(),
-);
+Route::get('filter/organizations', 'ApiController@filterOrganizations')
+    ->name('api:filter_organizations');
+
+Route::get(
+    'filter/organizations/{organization}/{resource}',
+    'ApiController@filterResource'
+)->name('api:filter_resource');
