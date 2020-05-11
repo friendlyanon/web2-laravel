@@ -10,16 +10,17 @@ class Invoice extends Model
 {
     use SoftDeletes;
 
+    public const STATUS_OPEN = 'open';
+    public const STATUS_CLOSED = 'closed';
+    public const STATUS_PAID = 'paid';
+    public const STATUS_RECTIFIED = 'rectified';
+
     protected $fillable = [
         'quantity',
         'total',
         'partner_id',
         'product_id',
         'discount_id',
-    ];
-
-    protected $casts = [
-        'is_closed' => 'boolean',
     ];
 
     public function partner(): BelongsTo

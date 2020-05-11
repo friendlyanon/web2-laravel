@@ -1,5 +1,6 @@
 <?php
 
+use App\Invoice;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,12 @@ class CreateInvoicesTable extends Migration
             $table->id();
             $table->integer('quantity');
             $table->decimal('total');
-            $table->boolean('is_closed')->default(false);
+            $table->enum('status', [
+                Invoice::STATUS_OPEN,
+                Invoice::STATUS_CLOSED,
+                Invoice::STATUS_PAID,
+                Invoice::STATUS_RECTIFIED,
+            ])->default(Invoice::STATUS_OPEN);
             $table->unsignedBigInteger('partner_id')->nullable();
             $table->unsignedBigInteger('product_id')->nullable();
             $table->unsignedBigInteger('discount_id')->nullable();
