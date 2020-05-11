@@ -70,4 +70,16 @@ class Organization extends Model
     {
         return $this->hasMany(Tax::class);
     }
+
+    public static function boot()
+    {
+        static::created(static function (Organization $model) {
+            $model->partnerGroups()->createMany([
+                ['name' => 'aktuális előfizetők'],
+                ['name' => 'állandó tagok'],
+                ['name' => 'ingyenes csoport'],
+                ['name' => 'inaktív csoport'],
+            ]);
+        });
+    }
 }
