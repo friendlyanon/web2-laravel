@@ -114,12 +114,12 @@ abstract class SubResourceController extends Controller
 
     protected function validateEditable($model) { }
 
-    private function validatedRequest(): FormRequest
+    protected function validatedRequest(): FormRequest
     {
         return app($this->request);
     }
 
-    private function builder(int $organization): Builder
+    protected function builder(int $organization): Builder
     {
         return $this->organizations->where('id', $organization)
             ->{$this->plural}();
