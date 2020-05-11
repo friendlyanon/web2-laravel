@@ -112,7 +112,10 @@ abstract class SubResourceController extends Controller
             ->withErrors(Lang::get("error.$this->plural.destroy"));
     }
 
-    protected function validateEditable($model) { }
+    protected function validateEditable($model)
+    {
+        //
+    }
 
     protected function validatedRequest(): FormRequest
     {
