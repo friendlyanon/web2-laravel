@@ -22,3 +22,14 @@ Route::resources([
     'organizations.products' => 'ProductController',
     'organizations.taxes' => 'TaxController',
 ]);
+
+Route::get(
+    'organizations/{organization}/invoices/status/{status}',
+    'InvoiceController@indexStatus',
+)->name('organizations.invoices.status.index');
+
+Route::addRoute(
+    ['PUT', 'PATCH'],
+    'organizations/{organization}/invoices/status/{invoice}',
+    'InvoiceController@updateStatus',
+)->name('organizations.invoices.status.update');
