@@ -13,8 +13,6 @@ use Str;
 
 abstract class SubResourceController extends Controller
 {
-    protected $middleware = ['auth'];
-
     /** @var string */
     protected $model;
 
@@ -31,6 +29,7 @@ abstract class SubResourceController extends Controller
     {
         parent::__construct();
 
+        $this->middleware('auth');
         $this->singular = Str::snake(class_basename($this->model));
         $this->plural = Str::plural($this->singular);
     }
@@ -76,6 +75,7 @@ abstract class SubResourceController extends Controller
     public function edit($organization, $id)
     {
         $model = $this->builder($organization)->findOrFail($id);
+        $this->validateEditable($model);
 
         return view("$this->plural.show", [$this->singular => $model]);
     }
@@ -84,6 +84,7 @@ abstract class SubResourceController extends Controller
     {
         $request = $this->validatedRequest();
         $model = $this->builder($organization)->findOrFail($id);
+        $this->validateEditable($model);
         $model->fill($request->all());
 
         if ($model->save()) {
@@ -110,6 +111,8 @@ abstract class SubResourceController extends Controller
         return Redirect::back()
             ->withErrors(Lang::get("error.$this->plural.destroy"));
     }
+
+    protected function validateEditable($model) { }
 
     private function validatedRequest(): FormRequest
     {
