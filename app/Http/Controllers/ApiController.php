@@ -11,14 +11,19 @@ use RuntimeException;
 
 class ApiController extends Controller
 {
+    /** @var Request */
     protected $request;
 
-    public function __construct(Request $request)
+    public function __construct()
     {
         parent::__construct();
 
-        $this->request = $request;
         $this->middleware('can:access_users')->only('filterUsers');
+        $this->middleware(function ($request, $next) {
+            $this->request = $request;
+
+            return $next($request);
+        });
     }
 
     public function filterUsers()
