@@ -73,6 +73,8 @@ class Organization extends Model
 
     public static function boot()
     {
+        parent::boot();
+
         static::created(static function (Organization $model) {
             $model->partnerGroups()->createMany([
                 ['name' => 'aktuális előfizetők'],
