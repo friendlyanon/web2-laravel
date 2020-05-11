@@ -113,10 +113,7 @@ abstract class SubResourceController extends Controller
 
     private function validatedRequest(): FormRequest
     {
-        /** @var FormRequest $request */
-        $request = ("$this->request::createFrom")(FormRequest::capture());
-        $request->validateResolved();
-        return $request;
+        return app($this->request);
     }
 
     private function builder(int $organization): Builder
