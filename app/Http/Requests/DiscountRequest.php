@@ -12,7 +12,9 @@ class DiscountRequest extends Request
     public function rules()
     {
         return [
-            //
+            'discount' => 'required|numeric|min:0|max:99.99',
+            'starts_at' => 'required|date',
+            'ends_at' => 'required|date',
         ];
     }
 }

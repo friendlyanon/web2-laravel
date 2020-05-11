@@ -12,7 +12,7 @@ class PartnerGroupRequest extends Request
     public function rules()
     {
         return [
-            //
+            'name' => 'required|string',
         ];
     }
 }

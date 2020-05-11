@@ -12,7 +12,10 @@ class ProductRequest extends Request
     public function rules()
     {
         return [
-            //
+            'quantity' => 'required|numeric|min:0',
+            'tariff' => 'required|numeric|min:0',
+            'name' => 'required|string',
+            'net_price' => 'required|numeric|min:0|max:999999.99',
         ];
     }
 }

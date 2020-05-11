@@ -12,7 +12,7 @@ class TaxRequest extends Request
     public function rules()
     {
         return [
-            //
+            'tax' => 'required|numeric|min:0|max:99.99',
         ];
     }
 }

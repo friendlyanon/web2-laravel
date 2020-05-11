@@ -12,7 +12,10 @@ class PartnerRequest extends Request
     public function rules()
     {
         return [
-            //
+            'name' => 'required|string',
+            'zip_code' => 'required|string',
+            'city' => 'required|string',
+            'address' => 'required|string',
         ];
     }
 }
