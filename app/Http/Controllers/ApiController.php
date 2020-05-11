@@ -25,22 +25,14 @@ class ApiController extends Controller
     {
         $models = User::query();
 
-        foreach ($this->request as $key => $value) {
-            $models->where($key, 'LIKE', $this->makeLikeString($value));
-        }
-
-        return response()->json($models->get());
+        return $this->handleFilter($models);
     }
 
     public function filterOrganizations()
     {
         $models = $this->organizations;
 
-        foreach ($this->request as $key => $value) {
-            $models->where($key, 'LIKE', $this->makeLikeString($value));
-        }
-
-        return response()->json($models->get());
+        return $this->handleFilter($models);
     }
 
     public function filterResource($organization, $resource)
@@ -51,6 +43,11 @@ class ApiController extends Controller
         $models = $this->organizations->where('id', $organization)
             ->{$resource}();
 
+        return $this->handleFilter($models);
+    }
+
+    private function handleFilter($models)
+    {
         foreach ($this->request as $key => $value) {
             $this->validateKey($models, $key);
             $models->where($key, 'LIKE', $this->makeLikeString($value));
@@ -63,7 +60,7 @@ class ApiController extends Controller
     {
         $literals = ['\\', '%', '_'];
         $escapes = ['\\\\', '\\%', '\\_'];
-        return str_replace($literals, $escapes, $string);
+        return '%' . str_replace($literals, $escapes, $string) . '%';
     }
 
     private function validateResource($resource)
