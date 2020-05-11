@@ -17,7 +17,7 @@ class CreateOrganizationUserTable extends Migration
             $table->foreignId('organization_id')->constrained()->onDelete('CASCADE');
             $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
             $table->timestamps();
-            $table->unique(['organization_id', 'user_id']);
+            $table->primary(['organization_id', 'user_id']);
         });
     }
 
