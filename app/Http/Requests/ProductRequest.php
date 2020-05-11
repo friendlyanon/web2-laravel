@@ -12,6 +12,7 @@ class ProductRequest extends Request
     public function rules()
     {
         return [
+            'unit' => 'required|string',
             'quantity' => 'required|numeric|min:0',
             'tariff' => 'required|numeric|min:0',
             'name' => 'required|string',
