@@ -7,7 +7,6 @@ use App\Invoice;
 use Illuminate\Support\LazyCollection;
 use Lang;
 use Redirect;
-use RuntimeException;
 
 class InvoiceController extends SubResourceController
 {
@@ -40,7 +39,9 @@ class InvoiceController extends SubResourceController
     protected function validateEditable($model)
     {
         if ($model->status !== Invoice::STATUS_OPEN) {
-            throw new RuntimeException(Lang::get('error.invoices.editable'));
+            $redirect = Redirect::back()
+                ->withErrors(Lang::get('error.invoices.editable'));
+            abort($redirect);
         }
     }
 }

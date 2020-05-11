@@ -7,7 +7,6 @@ use App\Organization;
 use App\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Lang;
-use RuntimeException;
 
 class ApiController extends Controller
 {
@@ -70,9 +69,7 @@ class ApiController extends Controller
 
     private function validateResource($resource)
     {
-        if (! \in_array($resource, Organization::RESOURCES, true)) {
-            throw new RuntimeException(Lang::get('error.api.unknown'));
-        }
+        $this->abortIf(! \in_array($resource, Organization::RESOURCES, true));
     }
 
     /**
@@ -82,8 +79,16 @@ class ApiController extends Controller
     private function validateKey($relation, $key)
     {
         $fillable = $relation->getModel()->getFillable();
-        if (! \in_array($key, $fillable, true)) {
-            throw new RuntimeException(Lang::get('error.api.unknown'));
+        $this->abortIf(! \in_array($key, $fillable, true));
+    }
+
+    private function abortIf($condition)
+    {
+        if (! $condition) {
+            return;
         }
+
+        $error = Lang::get('error.api.unknown');
+        abort(response()->json(compact('error')));
     }
 }
