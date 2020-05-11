@@ -11,6 +11,15 @@ class Organization extends Model
 {
     use SoftDeletes;
 
+    public const RESOURCES = [
+        'discounts',
+        'invoices',
+        'partners',
+        'partnerGroups',
+        'products',
+        'taxes',
+    ];
+
     protected $fillable = [
         'name',
         'address',
