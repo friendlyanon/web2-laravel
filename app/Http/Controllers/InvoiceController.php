@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\InvoiceRequest;
 use App\Invoice;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\LazyCollection;
 use Lang;
 use Redirect;
@@ -12,15 +13,15 @@ class InvoiceController extends SubResourceController
 {
     protected $model = Invoice::class;
 
-    protected $request = InvoiceRequest::class;
-
     public function indexStatus($organization, $status)
     {
         /** @var LazyCollection|Invoice[] $items */
         $items = $this->builder($organization)->where('status', $status)
             ->cursor();
+        $headers = Invoice::getHeaders();
+        $canModify = false;
 
-        return view('itemlist', compact('items'));
+        return view('itemlist', compact('items', 'headers', 'canModify'));
     }
 
     public function updateStatus($organization, $invoice, $status)
@@ -32,16 +33,22 @@ class InvoiceController extends SubResourceController
 
         return $model->save()
             ? $redirect->with('updated', true)
-            : $redirect->withErrors(Lang::get('error.invoices.update'));
+            : $redirect->withErrors(['error' => Lang::get('error.invoices.update')]);
     }
 
     /** @param Invoice $model */
     protected function validateEditable($model)
     {
-        if ($model->status !== Invoice::STATUS_OPEN) {
-            $redirect = Redirect::back()
-                ->withErrors(Lang::get('error.invoices.editable'));
-            abort($redirect);
+        if ($model->canBeEdited()) {
+            return;
         }
+
+        $error = Lang::get('error.invoices.editable');
+        abort(Redirect::back()->withErrors(compact('error')));
+    }
+
+    protected function validatedRequest(): FormRequest
+    {
+        return app(InvoiceRequest::class);
     }
 }

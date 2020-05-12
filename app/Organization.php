@@ -2,24 +2,11 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Organization extends Model
 {
-    use SoftDeletes;
-
-    public const RESOURCES = [
-        'discounts',
-        'invoices',
-        'partners',
-        'partnerGroups',
-        'products',
-        'taxes',
-    ];
-
     protected $fillable = [
         'name',
         'address',
@@ -34,6 +21,10 @@ class Organization extends Model
         'swift',
         'zip_code',
         'tax_number',
+    ];
+
+    protected static $headers = [
+        'name' => 'name',
     ];
 
     public function users(): BelongsToMany

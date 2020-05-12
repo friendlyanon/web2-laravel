@@ -2,23 +2,26 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Discount extends Model
 {
-    use SoftDeletes;
+    public $cardKey = 'id';
 
     protected $fillable = [
         'discount',
+        'starts_at',
         'ends_at',
     ];
 
     protected $casts = [
         'starts_at' => 'datetime',
         'ends_at' => 'datetime',
+    ];
+
+    protected static $headers = [
+        'id' => 'id',
     ];
 
     public function organization(): BelongsTo

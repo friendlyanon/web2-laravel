@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Utils\HasEditCheck;
+use App\Utils\HasTableHeaders;
 use Hash;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,6 +15,8 @@ class User extends Authenticatable
 {
     use SoftDeletes;
     use Notifiable;
+    use HasTableHeaders;
+    use HasEditCheck;
 
     protected $fillable = [
         'name',
@@ -29,6 +33,12 @@ class User extends Authenticatable
     protected $dates = ['email_verified_at'];
 
     protected $casts = ['is_admin' => 'boolean'];
+
+    protected static $headers = [
+        'name' => 'name',
+        'email' => 'email',
+        'is_admin' => 'is_admin',
+    ];
 
     public function getIsSuperadminAttribute(): bool
     {

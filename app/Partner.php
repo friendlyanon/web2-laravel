@@ -2,20 +2,25 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Partner extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = [
         'name',
         'city',
         'address',
         'zip_code',
         'partner_group_id',
+    ];
+
+    protected static $headers = [
+        'id' => 'id',
+        'name' => 'name',
+        'zip_code' => 'zip_code',
+        'city' => 'city',
+        'address' => 'address',
+        'partner_group' => 'partner_group.name',
     ];
 
     public function organization(): BelongsTo

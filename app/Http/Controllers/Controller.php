@@ -12,6 +12,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Lang;
 
 abstract class Controller extends BaseController
 {
@@ -48,9 +49,14 @@ abstract class Controller extends BaseController
         FormRequest $request,
         string $name
     ) {
+        $ids = $request->get($name);
+        if (empty($ids)) {
+            return;
+        }
+
         /** @var BelongsToMany $relation */
         $relation = $model->{$name}();
-        foreach ($request->get($name, []) as $id) {
+        foreach (explode(',', $ids) as $id) {
             $relation->attach($id);
         }
     }

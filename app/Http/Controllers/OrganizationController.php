@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OrganizationRequest;
 use App\Organization;
+use App\User;
+use App\Utils\ForeignHandler;
+use App\Utils\Slug;
 use Lang;
 use Redirect;
 
@@ -17,13 +20,24 @@ class OrganizationController extends Controller
     public function index()
     {
         $items = $this->organizations->cursor();
+        $headers = Organization::getHeaders();
+        $slug = Organization::getModelSlug();
+        $canModify = $this->user->is_admin;
 
-        return view('itemlist', compact('items'));
+        $table = compact('slug', 'items', 'headers', 'canModify');
+
+        return view('itemlist', compact('slug', 'table'));
     }
 
     public function create()
     {
-        return view('organizations.create');
+        $slug = Slug::fromModel(Organization::class);
+        $foreigns = ['user'];
+        $foreignHandler = new ForeignHandler(
+            static fn() => User::query(),
+        );
+
+        return view('resources.create', compact('slug', 'foreigns', 'foreignHandler'));
     }
 
     public function store(OrganizationRequest $request)
@@ -36,16 +50,18 @@ class OrganizationController extends Controller
                 ->with('created', true);
         }
 
+        $error = Lang::get('error.organizations.store');
         return Redirect::back()
-            ->withErrors(Lang::get('error.organizations.store'))
+            ->withErrors(compact('error'))
             ->withInput($request->input());
     }
 
     public function show($organization)
     {
         $model = $this->organizations->findOrFail($organization);
+        $slug = Slug::fromModel(Organization::class);
 
-        return view('organizations.show', ['organization' => $model]);
+        return view('organizations.show', compact('model', 'slug'));
     }
 
     public function edit($organization)
@@ -69,8 +85,9 @@ class OrganizationController extends Controller
                 ->with('updated', true);
         }
 
+        $error = Lang::get('error.organizations.update');
         return Redirect::back()
-            ->withErrors(Lang::get('error.organizations.update'))
+            ->withErrors(compact('error'))
             ->withInput($request->input());
     }
 
@@ -83,7 +100,7 @@ class OrganizationController extends Controller
                 ->with('deleted', $model->email);
         }
 
-        return Redirect::back()
-            ->withErrors(Lang::get('error.organizations.destroy'));
+        $error = Lang::get('error.organizations.destroy');
+        return Redirect::back()->withErrors(compact('error'));
     }
 }

@@ -6,3 +6,12 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+.table th {
+    position: sticky;
+    top: 0;
+}
+
+th[data-sort] {
+    cursor: pointer;
+}

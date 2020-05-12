@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Model;
+use App\Utils\ForeignHandler;
+use App\Utils\Slug;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\LazyCollection;
@@ -17,12 +19,6 @@ abstract class SubResourceController extends Controller
     protected $model;
 
     /** @var string */
-    protected $request;
-
-    /** @var string */
-    private $singular;
-
-    /** @var string */
     private $plural;
 
     public function __construct()
@@ -30,54 +26,71 @@ abstract class SubResourceController extends Controller
         parent::__construct();
 
         $this->middleware('auth');
-        $this->singular = Str::snake(class_basename($this->model));
-        $this->plural = Str::plural($this->singular);
+        $this->plural = Str::plural(Str::snake(class_basename($this->model)));
     }
 
     public function index($organization)
     {
         /** @var LazyCollection|Model[] $items */
         $items = $this->builder($organization)->cursor();
+        /** @var array<string, string> $headers */
+        $headers = ("$this->model::getHeaders")();
+        /** @var Slug $headers */
+        $slug = ("$this->model::getModelSlug")();
+        $slug->setOrganization($organization);
+        $canModify = true;
 
-        return view('itemlist', compact('items'));
+        $table = compact('slug', 'items', 'headers', 'canModify');
+
+        return view('itemlist', compact('slug', 'table'));
     }
 
     public function create($organization)
     {
-        return view("$this->plural.create", compact('organization'));
+        $slug = Slug::fromModel($this->model);
+        $slug->setOrganization($organization);
+        $foreignHandler = new ForeignHandler(
+            fn() => $this->builder($organization),
+        );
+
+        return view('resources.create', compact('slug', 'foreignHandler'));
     }
 
     public function store($organization)
     {
         $class = $this->model;
         $request = $this->validatedRequest();
-        /** @var HasMany $relation */
         $relation = $this->builder($organization);
 
         if ($relation->save(new $class($request->all()))) {
             return Redirect
-                ::route("$this->plural.index", compact('organization'))
+                ::route("organizations.$this->plural.index", compact('organization'))
                 ->with('created', true);
         }
 
+        $error = Lang::get("error.$this->plural.store");
         return Redirect::back()
-            ->withErrors(Lang::get("error.$this->plural.store"))
+            ->withErrors(compact('error'))
             ->withInput($request->input());
     }
 
     public function show($organization, $id)
     {
         $model = $this->builder($organization)->findOrFail($id);
+        $slug = Slug::fromModel($this->model);
+        $slug->setOrganization($organization);
 
-        return view("$this->plural.show", [$this->singular => $model]);
+        return view('resources.show', compact('slug', 'model'));
     }
 
     public function edit($organization, $id)
     {
         $model = $this->builder($organization)->findOrFail($id);
         $this->validateEditable($model);
+        $slug = Slug::fromModel($this->model);
+        $slug->setOrganization($organization);
 
-        return view("$this->plural.show", [$this->singular => $model]);
+        return view('resources.edit', compact('slug', 'model'));
     }
 
     public function update($organization, $id)
@@ -88,14 +101,15 @@ abstract class SubResourceController extends Controller
         $model->fill($request->all());
 
         if ($model->save()) {
-            return Redirect::route("$this->plural.show", [
-                'organization' => $organization,
-                $this->singular => $model,
-            ])->with('updated', true);
+            return Redirect::route(
+                "organizations.$this->plural.show",
+                compact('organization', 'model'),
+            );
         }
 
+        $error = Lang::get("error.$this->plural.update");
         return Redirect::back()
-            ->withErrors(Lang::get("error.$this->plural.update"))
+            ->withErrors(compact('error'))
             ->withInput($request->input());
     }
 
@@ -104,12 +118,14 @@ abstract class SubResourceController extends Controller
         $count = $this->builder($organization)->toBase()->delete($id);
 
         if ($count !== 0) {
-            return Redirect::route("$this->plural.index")
-                ->with('deleted', true);
+            return Redirect::route(
+                "organizations.$this->plural.index",
+                compact('organization'),
+            );
         }
 
-        return Redirect::back()
-            ->withErrors(Lang::get("error.$this->plural.destroy"));
+        $error = Lang::get("error.$this->plural.destroy");
+        return Redirect::back()->withErrors(compact('error'));
     }
 
     protected function validateEditable($model)
@@ -117,14 +133,16 @@ abstract class SubResourceController extends Controller
         //
     }
 
-    protected function validatedRequest(): FormRequest
+    /**
+     * @param int $organization
+     * @return HasMany
+     */
+    protected function builder(int $organization)
     {
-        return app($this->request);
+        $relation = Str::camel($this->plural);
+        return $this->organizations->findOrFail($organization)
+            ->{$relation}();
     }
 
-    protected function builder(int $organization): Builder
-    {
-        return $this->organizations->where('id', $organization)
-            ->{$this->plural}();
-    }
+    abstract protected function validatedRequest(): FormRequest;
 }

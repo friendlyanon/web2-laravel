@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Organization;
 use App\User;
+use App\Utils\ForeignHandler;
+use App\Utils\Slug;
 use Lang;
 use Redirect;
 
@@ -14,13 +17,24 @@ class UserController extends Controller
     public function index()
     {
         $items = User::cursor();
+        $headers = User::getHeaders();
+        $slug = User::getModelSlug();
+        $canModify = true;
 
-        return view('itemlist', compact('items'));
+        $table = compact('slug', 'items', 'headers', 'canModify');
+
+        return view('itemlist', compact('slug', 'table'));
     }
 
     public function create()
     {
-        return view('users.create');
+        $slug = Slug::fromModel(User::class);
+        $foreigns = ['organization'];
+        $foreignHandler = new ForeignHandler(
+            static fn() => Organization::query(),
+        );
+
+        return view('resources.create', compact('slug', 'foreigns', 'foreignHandler'));
     }
 
     public function store(UserRequest $request)
@@ -29,22 +43,26 @@ class UserController extends Controller
         $this->attachAll($model, $request, 'organizations');
 
         if ($model->save()) {
-            return Redirect::route('users.index')->with('created', true);
+            return Redirect::route('users.index');
         }
 
         return Redirect::back()
-            ->withErrors(Lang::get('error.users.store'))
+            ->withErrors(['error' => Lang::get('error.users.store')])
             ->withInput($request->input());
     }
 
     public function show(User $user)
     {
-        return view('users.show', compact('user'));
+        $slug = Slug::fromModel(User::class);
+
+        return view('resources.show', ['model' => $user, 'slug' => $slug]);
     }
 
     public function edit(User $user)
     {
-        return view('users.edit', compact('user'));
+        $slug = Slug::fromModel(User::class);
+
+        return view('resources.edit', ['model' => $user, 'slug' => $slug]);
     }
 
     public function update(UserRequest $request, User $user)
@@ -53,22 +71,21 @@ class UserController extends Controller
         $this->reattachAll($user, $request, 'organizations');
 
         if ($user->save()) {
-            return Redirect::route('users.show', compact('user'))
-                ->with('updated', true);
+            return Redirect::route('users.show', compact('user'));
         }
 
         return Redirect::back()
-            ->withErrors(Lang::get('error.users.update'))
+            ->withErrors(['error' => Lang::get('error.users.update')])
             ->withInput($request->input());
     }
 
     public function destroy(User $user)
     {
         if ($user->delete()) {
-            return Redirect::route('users.index')
-                ->with('deleted', $user->email);
+            return Redirect::route('users.index');
         }
 
-        return Redirect::back()->withErrors(Lang::get('error.users.destroy'));
+        return Redirect::back()
+            ->withErrors(['error' => Lang::get('error.users.destroy')]);
     }
 }
