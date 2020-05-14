@@ -24,7 +24,7 @@ class CreateInvoicesTable extends Migration
                 Invoice::STATUS_PAID,
                 Invoice::STATUS_RECTIFIED,
             ])->default(Invoice::STATUS_OPEN);
-            $table->unsignedBigInteger('partner_id')->nullable();
+            $table->unsignedBigInteger('partner_group_id')->nullable();
             $table->unsignedBigInteger('product_id')->nullable();
             $table->unsignedBigInteger('discount_id')->nullable();
             $table->unsignedBigInteger('organization_id');

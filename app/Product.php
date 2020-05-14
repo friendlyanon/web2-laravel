@@ -11,12 +11,15 @@ class Product extends Model
         'unit',
         'net_price',
         'quantity',
-        'tariff',
         'tax_id',
     ];
 
     protected static $headers = [
-        'id' => 'id',
+        'name' => 'name',
+        'quantity' => 'quantity',
+        'unit' => 'unit',
+        'net_price' => 'net_price',
+        'tax' => 'tax.tax',
     ];
 
     public function organization(): BelongsTo

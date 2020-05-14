@@ -38,8 +38,11 @@ return [
         'ends_at' => 'Lejárati dátum',
     ],
     'invoices' => [
+        'id' => 'Azonosító',
+        'product_name' => 'Termék neve',
         'quantity' => 'Mennyiség',
         'total' => 'Összeg',
+        'partner_group_name' => 'Partnercsoport',
     ],
     'partners' => [
         'id' => 'Azonosító',
@@ -53,10 +56,11 @@ return [
         'name' => 'Név',
     ],
     'products' => [
-        'quantity' => 'Név',
+        'quantity' => 'Mennyiség',
         'unit' => 'Mértékegység',
         'name' => 'Név',
         'net_price' => 'Nettó érték',
+        'tax' => 'Adó',
     ],
     'taxes' => [
         'tax' => 'Adó',

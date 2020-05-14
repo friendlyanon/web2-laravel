@@ -12,7 +12,7 @@ class AddForeignKeysToTables extends Migration
         'taxes' => [],
         'discounts' => [],
         'products' => ['tax'],
-        'invoices' => ['partner', 'product', 'discount'],
+        'invoices' => ['partner_group', 'product', 'discount'],
     ];
 
     /**

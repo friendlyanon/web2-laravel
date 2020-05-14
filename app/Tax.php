@@ -12,7 +12,7 @@ class Tax extends Model
     protected $fillable = ['tax'];
 
     protected static $headers = [
-        'id' => 'id',
+        'tax' => 'tax',
     ];
 
     public function organization(): BelongsTo

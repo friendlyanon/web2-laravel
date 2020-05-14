@@ -16,18 +16,22 @@ class Invoice extends Model
     protected $fillable = [
         'quantity',
         'total',
-        'partner_id',
+        'partner_group_id',
         'product_id',
         'discount_id',
     ];
 
     protected static $headers = [
         'id' => 'id',
+        'product_name' => 'product.name',
+        'quantity' => 'quantity',
+        'total' => 'total',
+        'partner_group_name' => 'partnerGroup.name',
     ];
 
-    public function partner(): BelongsTo
+    public function partnerGroup(): BelongsTo
     {
-        return $this->belongsTo(Partner::class);
+        return $this->belongsTo(PartnerGroup::class);
     }
 
     public function product(): BelongsTo

@@ -14,7 +14,6 @@ class InvoiceRequest extends Request
         return [
             'quantity' => 'required|numeric|min:1',
             'total' => 'required|numeric|min:0',
-            'is_closed' => 'required|boolean',
         ];
     }
 }

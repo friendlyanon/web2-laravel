@@ -21,7 +21,9 @@ class Discount extends Model
     ];
 
     protected static $headers = [
-        'id' => 'id',
+        'discount' => 'discount',
+        'starts_at' => 'starts_at',
+        'ends_at' => 'ends_at',
     ];
 
     public function organization(): BelongsTo
