@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Model;
 use App\Utils\ForeignHandler;
 use App\Utils\Slug;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\LazyCollection;
@@ -50,7 +49,7 @@ abstract class SubResourceController extends Controller
         $slug = Slug::fromModel($this->model);
         $slug->setOrganization($organization);
         $foreignHandler = new ForeignHandler(
-            fn() => $this->builder($organization),
+            fn() => $this->organizations->findOrFail($organization),
         );
 
         return view('resources.create', compact('slug', 'foreignHandler'));

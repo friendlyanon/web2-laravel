@@ -20,7 +20,7 @@ class Partner extends Model
         'zip_code' => 'zip_code',
         'city' => 'city',
         'address' => 'address',
-        'partner_group' => 'partner_group.name',
+        'partner_group' => 'partnerGroup.name',
     ];
 
     public function organization(): BelongsTo
