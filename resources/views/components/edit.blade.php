@@ -3,7 +3,7 @@
 <?php /** @var string[] $foreigns */ ?>
 <?php /** @var \App\Utils\ForeignHandler $foreignHandler */ ?>
 
-<form action="{{ route("$slug->prefix.store", $slug($model)) }}" method="POST">
+<form action="{{ route("$slug->prefix.update", $slug($model)) }}" method="POST">
     @csrf
     @method('PATCH')
 

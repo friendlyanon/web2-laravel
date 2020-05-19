@@ -6,7 +6,7 @@
 @php($header = data_get($model, data_get($model, 'cardKey', 'name'), "$slug"))
 @section('content')
     @component('components.card', compact('header'))
-        @component('components.edit', compact('slug', 'model'))
+        @component('components.edit', compact('slug', 'model', 'foreignHandler'))
         @endcomponent
     @endcomponent
 @endsection

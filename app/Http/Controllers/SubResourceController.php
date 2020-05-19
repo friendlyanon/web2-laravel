@@ -88,8 +88,11 @@ abstract class SubResourceController extends Controller
         $this->validateEditable($model);
         $slug = Slug::fromModel($this->model);
         $slug->setOrganization($organization);
+        $foreignHandler = new ForeignHandler(
+            fn() => $this->organizations->findOrFail($organization),
+        );
 
-        return view('resources.edit', compact('slug', 'model'));
+        return view('resources.edit', compact('slug', 'model', 'foreignHandler'));
     }
 
     public function update($organization, $id)
@@ -100,9 +103,13 @@ abstract class SubResourceController extends Controller
         $model->fill($request->all());
 
         if ($model->save()) {
+            $name = Str::singular($this->plural);
             return Redirect::route(
                 "organizations.$this->plural.show",
-                compact('organization', 'model'),
+                [
+                    'organization' => $organization,
+                    $name => $model,
+                ],
             );
         }
 
